@@ -1,0 +1,21 @@
+{
+  "id": "3.David",
+  "file": "演员照片0905/3.David.PNG",
+  "px": [
+    2032,
+    3796
+  ],
+  "headTopRatio": 0.003688,
+  "headCenterXRatio": 0.40748,
+  "headWidthRatio": 0.408957,
+  "headWidestDepth": 0.123024,
+  "aspect": 0.5353,
+  "dpi_at_target": 271.6,
+  "center_spread": 0.0,
+  "alpha_threshold": 128,
+  "verdict": "OK-WARN",
+  "fatal": [],
+  "issues": [
+    "发顶距画布上沿仅 0.37%，裁切极紧；本期够用，但以后若需把头往上挪没有余量"
+  ]
+}

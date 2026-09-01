@@ -14,7 +14,11 @@
   function w(s){OUT[OUT.length]=s;}
   function safe(f,v){try{return f();}catch(e){return v;}}
   function bb(b){return '['+b[0].toFixed(4)+','+b[1].toFixed(4)+','+b[2].toFixed(4)+','+b[3].toFixed(4)+']';}
+  // 人像可能是链接图(PlacedItem)也可能已被嵌入(RasterItem)。只认前者的话，
+  // 任何 embed 过的文件都会报 photo_gb=NONE，R2/R3/COV 全部读不到 —— 等于无法验收。
+  // 验收只需要 geometricBounds，两种类型都有；photo_file 对 RasterItem 会落到 MISSING，无妨。
   function pl(x){try{if(x.placedItems.length)return x.placedItems[0];}catch(e){}
+    try{if(x.rasterItems.length)return x.rasterItems[0];}catch(e1){}
     try{for(var i=0;i<x.groupItems.length;i++){var z=pl(x.groupItems[i]);if(z)return z;}}catch(e2){}return null;}
   function ink(tf){var g=tf.duplicate(d,ElementPlacement.PLACEATEND);tmp[tmp.length]=g;
     try{var o=g.createOutline();tmp[tmp.length]=o;return o.geometricBounds;}catch(e){return null;}}
@@ -26,7 +30,10 @@
     for(var i=0;i<names.length;i++){
       var nm=names[i], L=d.layers.getByName(nm);
       var tf=null, g=null;
-      if(nm==='ACTOR_05'){
+      // 按结构判断，不按名字：任何带 SECRET_GUEST_MODE 的格子都走剪影分支。
+      // 原先写死 nm==='ACTOR_05'，第 4 格改成剪影后会被漏检。
+      var hasSG=safe(function(){L.groupItems.getByName('SECRET_GUEST_MODE');return true;},false);
+      if(hasSG){
         var pm=safe(function(){return L.layers.getByName('PHOTO_MODE').visible;},'?');
         var sg=safe(function(){return L.groupItems.getByName('SECRET_GUEST_MODE').hidden;},'?');
         w(nm+' photo_mode_visible='+pm+' silhouette_hidden='+sg);
@@ -68,7 +75,10 @@
     var dn=['MONTH','DAY','WEEKDAY','EVENT TIME'];
     for(var k=0;k<dn.length;k++){
       var t=DT.textFrames.getByName(dn[k]);
-      w('DATE '+dn[k]+'="'+t.contents+'" gb='+bb(t.geometricBounds));
+      // 同时给出墨迹边界：MONTH→DAY 间距规则定义在墨迹上，文字框含内边距不可用
+      var dig=ink(t);
+      w('DATE '+dn[k]+'="'+t.contents+'" gb='+bb(t.geometricBounds)
+        +' ink_gb='+(dig?bb(dig):'FAIL'));
     }
     var hb=DT.groupItems.getByName('HOST BADGE');
     w('HOST_BADGE gb='+bb(hb.geometricBounds)+' hidden='+hb.hidden);

@@ -1,0 +1,19 @@
+{
+  "id": "2.Chin Wang",
+  "file": "演员照片0905/2.Chin Wang.png",
+  "px": [
+    2756,
+    3796
+  ],
+  "headTopRatio": 0.160169,
+  "headCenterXRatio": 0.522678,
+  "headWidthRatio": 0.32656,
+  "headWidestDepth": 0.148051,
+  "aspect": 0.726027,
+  "dpi_at_target": 368.4,
+  "center_spread": 0.0,
+  "alpha_threshold": 128,
+  "verdict": "OK",
+  "fatal": [],
+  "issues": []
+}

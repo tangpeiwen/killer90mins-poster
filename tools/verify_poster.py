@@ -36,6 +36,9 @@ def parse_l4(path):
                              'silhouette_hidden': m.group(3)}
     for m in re.finditer(r'DATE (\S[^=]*)="(.*?)"', txt):
         misc.setdefault('date', {})[m.group(1).strip()] = m.group(2)
+    for m in re.finditer(r'DATE (\S[^=]*)=".*?" gb=\[[^\]]+\] ink_gb=\[([^\]]+)\]', txt):
+        misc.setdefault('date_ink', {})[m.group(1).strip()] = \
+            [float(v) for v in m.group(2).split(',')]
     m = re.search(r'HOST_BADGE gb=\[([^\]]+)\] hidden=(\S+)', txt)
     if m:
         misc['host'] = {'gb': [float(v) for v in m.group(1).split(',')], 'hidden': m.group(2)}
@@ -145,6 +148,21 @@ def main():
     ok &= dok
     print(f'日期  {d.get("MONTH")} {d.get("DAY")} {d.get("WEEKDAY")}  |  {d.get("EVENT TIME")}   '
           f'{"PASS" if dok else "FAIL"}')
+
+    # MONTH 墨迹右沿 → DAY 墨迹左沿。模板里 DAY/WEEKDAY 位置是死的，
+    # 换月份或换成一位数就走形；目标值由两份认可稿反推（见 config 的 _date_gap_note）。
+    di = misc.get('date_ink', {})
+    want = rule.get('date_month_to_day_gap_mm')
+    if want is not None and {'MONTH', 'DAY'} <= set(di):
+        got_gap = (di['DAY'][0] - di['MONTH'][2]) * PT
+        tol = rule.get('tol_date_gap_mm', 1.0)
+        gok = abs(got_gap - want) <= tol
+        ok &= gok
+        print(f'日期间距  MONTH→DAY {got_gap:.2f}mm  目标 {want}±{tol}mm   '
+              f'{"PASS" if gok else "FAIL"}')
+    elif want is not None:
+        ok = False
+        print('日期间距  L4 里没有 ink_gb —— 审计脚本是旧版，重跑 _audit_output.jsx   FAIL')
 
     hb = misc.get('host', {})
     hs = cfg['slots'][brief['host']]

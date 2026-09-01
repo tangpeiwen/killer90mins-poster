@@ -1,0 +1,50 @@
+{
+  "date": "2026-09-05",
+  "month": "SEPT",
+  "day": "5",
+  "weekday": "sat.",
+  "time": "19:30-21:00",
+  "host": "ACTOR_01",
+  "slots": {
+    "ACTOR_01": {
+      "mode": "PHOTO",
+      "name": "ian b",
+      "name_font": "LaMachineCompany",
+      "name_size": 54.25,
+      "name_fill": "glyph",
+      "photo": "演员照片0905/1.IAN B.png",
+      "metrics": "actors/1.IAN B.json"
+    },
+    "ACTOR_02": {
+      "mode": "PHOTO",
+      "name": "chin wang",
+      "name_font": "LaMachineCompany",
+      "name_size": 49.19,
+      "name_fill": "glyph",
+      "photo": "演员照片0905/2.Chin Wang.png",
+      "metrics": "actors/2.Chin Wang.json",
+      "target_head_width_mm": 77.4,
+      "_note": "长发，轮廓被头发严重撑宽（认可稿 killer90mins_v3.ai 实测 chin wang 77.4mm，其余短发者均值 64.4mm）。此值直接沿用认可稿，非本期新拍。 字号 49.19 而非模板默认 54.25：认可稿 v3 里设计师给 \"chin wang\" 这个名字用的就是 49.19；54.25 时墨迹宽 102.29mm、黑板宽 103.89mm，单边只剩 0.80mm，贴边。"
+    },
+    "ACTOR_03": {
+      "mode": "PHOTO",
+      "name": "david",
+      "name_font": "LaMachineCompany",
+      "name_size": 54.25,
+      "name_fill": "glyph",
+      "photo": "演员照片0905/3.David.PNG",
+      "metrics": "actors/3.David.json"
+    },
+    "ACTOR_04": {
+      "mode": "SECRET_GUEST",
+      "_who": "Andreas（黑衣人）—— 剪影不显示真名，此字段仅供人工追溯"
+    },
+    "ACTOR_05": {
+      "mode": "SECRET_GUEST",
+      "_who": "Simon（黑衣人）—— 剪影不显示真名，此字段仅供人工追溯"
+    }
+  },
+  "target_head_width_mm": 64.4,
+  "_target_head_width_note": "认可稿 killer90mins_v3.ai 实测：短发四人 64.6/66.8/63.1/63.1（均值 64.4），长发 chin wang 77.4",
+  "_final": "设计师终稿 killer90mins_20260905/killer90mins_20260905.ai（2026-09-01 20:20）。相对本管线产物只改两处：ACTOR_01 名字 ian→ian B；ACTOR_04 换了一张新绘制的剪影。其余对象（chin wang / david / 两个剪影名牌 / 四个日期字段）逐位相同，未被改动。注意：新剪影只存在于终稿，母版里仍是从第 5 格复制的那一版，重跑管线不会复现终稿。"
+}

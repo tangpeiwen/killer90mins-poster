@@ -44,10 +44,15 @@ def load(brief_path):
     return brief, cfg
 
 
+def outdir_for(brief):
+    """产出目录跟着 brief 的日期走，不写死某一期。"""
+    return ROOT / ('killer90mins_' + brief['date'].replace('-', ''))
+
+
 # ────────────────────────────── STAGE 1 ──────────────────────────────
 def stage1(brief, cfg, out_jsx, silent=False):
     master = ROOT / cfg['_source']
-    outdir = ROOT / 'killer90mins_20260829'
+    outdir = outdir_for(brief)
     stem = 'killer90mins_auto_' + brief['date'].replace('-', '')
     L = []
     A = L.append
@@ -152,6 +157,20 @@ def parse_measure(path):
     return out
 
 
+def parse_dates(path):
+    """把 stage1 的 txt 里的 DATE 行解析成 {字段: {value, text_gb, ink_gb}}"""
+    txt = Path(path).read_text(encoding='utf-8')
+    out = {}
+    for m in re.finditer(
+            r'DATE (\S[^=]*?) value=(.*?) text_gb=\[([^\]]+)\] ink_gb=\[([^\]]+)\]', txt):
+        out[m.group(1).strip()] = {
+            'value': m.group(2),
+            'text_gb': [float(v) for v in m.group(3).split(',')],
+            'ink_gb': [float(v) for v in m.group(4).split(',')],
+        }
+    return out
+
+
 def rot_rect(ink, th):
     """从旋转矩形的轴对齐外框还原真实边长 (w, h) 与中心"""
     l, t, r, b = ink
@@ -177,7 +196,7 @@ def head_profile(png, alpha=128):
 
 def stage2(brief, cfg, measure_path, out_jsx, silent=False):
     meas = parse_measure(measure_path)
-    outdir = ROOT / 'killer90mins_20260829'
+    outdir = outdir_for(brief)
     stem = 'killer90mins_auto_' + brief['date'].replace('-', '')
     src = outdir / (stem + '_s1.ai')
     G = cfg['rules']['gap_card_to_head_mm'] * MM
@@ -245,6 +264,31 @@ def stage2(brief, cfg, measure_path, out_jsx, silent=False):
         report.append((slot, s['name'], GP * PT, dx * PT, dy * PT, tgt, scale,
                        (top - h_pt - pan_bot) * PT, w_pt * PT, h_pt * PT))
 
+    # ---------- 日期重排 ----------
+    # 模板里 DAY / WEEKDAY 的位置是死的，换月份或换成一位数就会走形：
+    # SEPT 比 AUG 宽 31mm，而 "5" 比 "29" 窄，两头一叠加，MONTH→DAY 间距从认可稿的
+    # 4.6~6.2mm 撑到 23mm。目标间距由两份认可稿反推（v3 SEPT/22 = 6.18mm，
+    # 0829 AUG/29 = 4.59mm，取均值），与 R0 逐格值的推导方式一致。
+    # DAY 与 WEEKDAY 必须整体平移：只挪 DAY 会把 DAY→WEEKDAY 间距同样撑开。
+    dates = parse_dates(measure_path)
+    date_moves = []
+    date_report = None
+    gap_mm = cfg['rules'].get('date_month_to_day_gap_mm')
+    if gap_mm is not None and {'MONTH', 'DAY'} <= set(dates):
+        month_r = dates['MONTH']['ink_gb'][2]
+        day_l = dates['DAY']['ink_gb'][0]
+        cur_gap = day_l - month_r
+        want_gap = gap_mm * MM
+        shift = want_gap - cur_gap          # 负值=左移
+        for fld in ('DAY', 'WEEKDAY'):
+            if fld in dates:
+                date_moves.append((fld, shift))
+        date_report = (dates['MONTH']['value'], dates['DAY']['value'],
+                       cur_gap * PT, gap_mm, shift * PT)
+        print('      日期  %s %s  MONTH→DAY %.2f→%.2fmm  DAY/WEEKDAY 整体 %+.2fmm'
+              % (date_report[0], date_report[1], date_report[2],
+                 date_report[3], date_report[4]))
+
     # ---------- 生成 JSX ----------
     L = []; A = L.append
     A('#target illustrator')
@@ -279,6 +323,13 @@ def stage2(brief, cfg, measure_path, out_jsx, silent=False):
     A('   p.width=q.w; p.height=q.h; p.left=q.left; p.top=q.top;')
     A('   log.writeln(q.S+" card="+q.cardL+","+q.cardT+" photo="+q.left+","+q.top+","+q.w+","+q.h);')
     A('  }')
+    if date_moves:
+        A('  var DT=d.layers.getByName("\\u65e5\\u671f/\\u65f6\\u95f4/\\u4e3b\\u6301\\u4eba\\u6807\\u7b7e");')
+        for fld, sh in date_moves:
+            A('  var dt_%s=DT.textFrames.getByName(%s); dt_%s.translate(%.5f,0);'
+              % (fld.replace(' ', '_'), esc(fld), fld.replace(' ', '_'), sh))
+            A('  log.writeln("DATE %s shifted="+%.5f+" new_gb="+dt_%s.geometricBounds.join(","));'
+              % (fld, sh, fld.replace(' ', '_')))
     A('  log.close(); d.save();')
     A('  var e=new ExportOptionsPNG24(); e.antiAliasing=true; e.transparency=false;')
     A('  e.artBoardClipping=true; e.horizontalScale=200; e.verticalScale=200;')
@@ -353,7 +404,7 @@ def run_all(brief_path, brief, cfg, verify=True):
     print('Illustrator %s' % msg)
 
     stem = 'killer90mins_auto_' + brief['date'].replace('-', '')
-    outdir = ROOT / 'killer90mins_20260829'
+    outdir = outdir_for(brief)
     tag = brief['date'].replace('-', '')
 
     # ---- stage 1 ----
@@ -386,8 +437,11 @@ def run_all(brief_path, brief, cfg, verify=True):
            % (esc(str(outdir / (stem + '.ai'))), esc(str(ast_path))))
     drive(audit, ast_path, 'L4-audit', preamble=pre)
     print('      %s' % (stem + '_L4.txt'))
+    # verify_poster.py 的签名是 (l4_txt, brief)，此前只传了 brief，
+    # 导致 run 每次都因 argparse 报错而误判「验收未通过」。
     r = subprocess.run([sys.executable, str(ROOT / 'tools' / 'verify_poster.py'),
-                        str(brief_path)], capture_output=True, text=True)
+                        str(outdir / (stem + '_L4.txt')), str(brief_path)],
+                       capture_output=True, text=True)
     print(r.stdout.rstrip() or r.stderr.rstrip())
     if r.returncode != 0:
         raise SystemExit('验收未通过 —— 按纪律：改 config/slots.json 或 actors/<id>.json '
@@ -413,7 +467,7 @@ def main():
         print(f'         {txt}')
     else:
         stem = 'killer90mins_auto_' + brief['date'].replace('-', '')
-        mp = ROOT / 'killer90mins_20260829' / (stem + '_s1_measure.txt')
+        mp = outdir_for(brief) / (stem + '_s1_measure.txt')
         jsx = ROOT / 'tools' / ('_stage2_' + brief['date'].replace('-', '') + '.jsx')
         j, rep, ai, png = stage2(brief, cfg, mp, jsx)
         print(f'已生成  {j}\n')
