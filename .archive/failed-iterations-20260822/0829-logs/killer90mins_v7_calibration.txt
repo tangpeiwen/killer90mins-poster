@@ -1,0 +1,1 @@
+source=killer90mins_20260819/killer90mins_v3.aioutput=killer90mins_v7.ainamecards=master transforms preserved; text only changedhead-gap=12mm from visible namecard edge; portraits only movedactor_04_font=Huiwen-MinchoGBK-Regular (0805 ACTOR_03 reference)actor_05=SECRET_GUEST; PHOTO_MODE hidden

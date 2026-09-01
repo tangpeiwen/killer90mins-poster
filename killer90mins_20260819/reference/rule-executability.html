@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>参考卡 · 规则可执行性检查表</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<p class="kicker">参考卡 · 可打印</p>
+<h1>规则可执行性检查表</h1>
+<p class="lede">给任意一条 skill 里的规则做体检。三十秒一条。</p>
+
+<h2>一、主判据</h2>
+
+<div class="callout key">
+<p style="font-size:1.15rem;font-weight:600">跑完之后，谁来判断这一条满足了没有？</p>
+<p>答案只有三种，写下来就行：<br>
+<strong>一段能跑的代码</strong> · <strong>一个明确指定的人在看明确指定的东西</strong> · <strong>没想过</strong></p>
+<p>第三种是要修的。第二种合法 —— 但必须<em>写出来</em>，藏起来的人工环节最致命。</p>
+</div>
+
+<h2>二、四个快速嗅探</h2>
+
+<table>
+<tr><th style="width:9rem">出现这些词</th><th>问自己</th></tr>
+<tr><td class="n">大约 / approximately<br>尽量 / 视情况</td>
+    <td>这个模糊是真的必要，还是我当时没测？大多数时候是后者。</td></tr>
+<tr><td class="n">看起来 / visually<br>合适 / 自然 / 协调</td>
+    <td>换个人看会得到同样结论吗？换个时间我自己看呢？</td></tr>
+<tr><td class="n">一个具体数字</td>
+    <td><strong>它从哪来？</strong>测的 / 从认可样本反推的 / 人拍板的 —— 三选一，写在旁边。<br>
+    答不上来就是编的。<mark>没有来源的数字，下一个人会顺手改成整数。</mark></td></tr>
+<tr><td class="n">保持 / 对齐 / 居中<br>距离 N 毫米</td>
+    <td>这里藏着一个<strong>测量问题</strong>。量哪两条边？在什么位置量？边界怎么定义？</td></tr>
+</table>
+
+<h2>三、把"无判定"改成"有判定"</h2>
+
+<table>
+<tr><th style="width:6rem">手法</th><th>怎么做</th><th>例子</th></tr>
+<tr><td class="n">定义边界</td><td>把模糊的名词换成可复现的算法</td>
+    <td>“visible face” → <code>alpha ≥ 128 连续覆盖 ≥ 图高 0.1% 的第一行</code></td></tr>
+<tr><td class="n">标注来源</td><td>每个数字后面写它从哪来</td>
+    <td><code>12.0 ± 1.0mm</code>（认可稿实测 11.45–12.56）</td></tr>
+<tr><td class="n">给参照物</td><td>没有硬指标时，锚到一个稳定的外部样本</td>
+    <td>“和这三篇的语气一致”“和上一版的目录结构一致”</td></tr>
+<tr><td class="n">列反例</td><td>正面难定义时，写死不许出现什么</td>
+    <td>“不许改动 STATIC 图层”“不许出现这五类表达”</td></tr>
+</table>
+
+<h2>四、容差怎么定</h2>
+
+<div class="callout">
+<p><strong>从认可样本反推，取"不严于人工水平"。</strong></p>
+<p>不要凭印象拍。实际发生过：容差拍成 4.0mm，而设计师认可稿实测最差 4.21mm ——
+等于拿一把认可稿自己都过不了的尺子在量东西。</p>
+<p><strong>验收脚本必须先能通过认可样本。</strong>通不过，先修尺子，别改产物。</p>
+</div>
+
+<h2>五、三个稳定器（按重要性）</h2>
+
+<table>
+<tr><th style="width:2rem">#</th><th>要求</th><th>自检</th></tr>
+<tr><td class="n">1</td><td>每条规则都有独立的判定</td>
+    <td>验收和执行是<strong>两个东西</strong>吗？脚本自己打印"通过"不算数。<br>
+    <mark>漏检的规则等于没有规则。</mark>写完验收，逐条对照规则清单。</td></tr>
+<tr><td class="n">2</td><td>每个数字都有来源</td>
+    <td>随机抽三个数字，能说出它从哪来吗？</td></tr>
+<tr><td class="n">3</td><td>系统有不动点</td>
+    <td>有没有两个东西互为参照、还同时在动？<br>
+    有的话<strong>那个迭代数学上就不收敛</strong>，再精确也没用。</td></tr>
+</table>
+
+<h2>六、什么时候必须写验收</h2>
+
+<table>
+<tr><th style="width:7rem">失败的方式</th><th>例子</th><th>要不要写</th></tr>
+<tr><td class="n">响亮</td><td>编译不过、脚本报错、API 返回 400</td><td>环境自带验收，可省</td></tr>
+<tr><td class="n">静默</td><td>海报差 3mm、数据少一行、配置写对了但没生效</td>
+    <td><strong>必须写</strong> —— 它看起来是对的</td></tr>
+</table>
+
+<p>再叠一条：<strong>这个 skill 会被反复调用吗？</strong>会 → 收益按次数累积。
+两个都占的，验收标准比方法本身还重要。</p>
+
+<div class="footer">
+<p>来自 <a href="../lessons/0001-who-decides.html">第 1 课 · 判定权在谁手里</a>。<br>
+一手材料：<code>../../skills/update-killer90mins-poster/references/</code>（重写版）与
+<code>../../.archive/skills-nested-20260819-20260825/</code>（第一版）。</p>
+</div>
+
+</body>
+</html>

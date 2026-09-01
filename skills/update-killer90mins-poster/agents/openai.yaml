@@ -1,0 +1,4 @@
+interface:
+  display_name: "Killer90mins 海报更新"
+  short_description: "从 brief 生成 Killer90mins 海报：Python 算坐标、JSX 只赋值、验收读回 .ai 实测"
+  default_prompt: "Use $update-killer90mins-poster to generate the next Killer90mins poster from briefs/<date>.json, then run the L4 acceptance check."

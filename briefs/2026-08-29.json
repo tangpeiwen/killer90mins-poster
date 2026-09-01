@@ -1,0 +1,52 @@
+{
+  "date": "2026-08-29",
+  "month": "AUG",
+  "day": "29",
+  "weekday": "sat.",
+  "time": "19:30-21:00",
+  "host": "ACTOR_01",
+  "slots": {
+    "ACTOR_01": {
+      "mode": "PHOTO",
+      "name": "casper",
+      "name_font": "LaMachineCompany",
+      "name_size": 54.25,
+      "name_fill": "glyph",
+      "photo": "0829 Killer/1.CASPER.png",
+      "metrics": "actors/1.CASPER.json"
+    },
+    "ACTOR_02": {
+      "mode": "PHOTO",
+      "name": "caleb",
+      "name_font": "LaMachineCompany",
+      "name_size": 54.25,
+      "name_fill": "glyph",
+      "photo": "0829 Killer/2.Caleb.png",
+      "metrics": "actors/2.Caleb.json"
+    },
+    "ACTOR_03": {
+      "mode": "PHOTO",
+      "name": "ayin",
+      "name_font": "LaMachineCompany",
+      "name_size": 54.25,
+      "name_fill": "glyph",
+      "photo": "0829 Killer/3.Ayin.png",
+      "metrics": "actors/3.Ayin.json",
+      "_note": "曾试 77.4mm（沿用认可稿长发者 chin wang 的值），出图偏大。实测「肤色宽/轮廓宽」：ayin 0.804，属普通档（ian 0.943 / kent 0.884 / caleb 0.858 / jorge 0.726），并非 chin wang 那种被长发严重撑宽的 0.620。故回归默认 64.4mm。"
+    },
+    "ACTOR_04": {
+      "mode": "PHOTO",
+      "name": "凌 浩",
+      "name_font": "Huiwen-MinchoGBK-Regular",
+      "name_size": 54.25,
+      "name_fill": "white",
+      "photo": "0829 Killer/4.凌浩.png",
+      "metrics": "actors/4.凌浩.json"
+    },
+    "ACTOR_05": {
+      "mode": "SECRET_GUEST"
+    }
+  },
+  "target_head_width_mm": 64.4,
+  "_target_head_width_note": "认可稿 killer90mins_v3.ai 实测：短发四人 64.6/66.8/63.1/63.1（均值 64.4），长发 chin wang 77.4"
+}

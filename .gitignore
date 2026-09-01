@@ -1,0 +1,24 @@
+# ── 二进制产出与母版：全部留在本地，不进仓库 ──
+# 母版 killer90mins_v3.ai 单文件 158MB，超过 GitHub 100MB 硬限
+*.ai
+*.png
+*.PNG
+*.jpg
+*.JPG
+*.jpeg
+*.pdf
+
+# ── 商业字体，不再分发 ──
+*.ttf
+*.otf
+
+# ── 真人演员照片 ──
+演员照片0905/
+0829 Killer/
+
+# ── Python ──
+__pycache__/
+*.pyc
+
+# ── macOS ──
+.DS_Store

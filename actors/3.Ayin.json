@@ -1,0 +1,22 @@
+{
+  "id": "3.Ayin",
+  "file": "0829 Killer/3.Ayin.png",
+  "px": [
+    2222,
+    2656
+  ],
+  "headTopRatio": 0.004518,
+  "headCenterXRatio": 0.571332,
+  "headWidthRatio": 0.323132,
+  "headWidestDepth": 0.199172,
+  "aspect": 0.836596,
+  "dpi_at_target": 297.0,
+  "center_spread": 0.004275,
+  "alpha_threshold": 128,
+  "verdict": "OK-WARN",
+  "fatal": [],
+  "issues": [
+    "头中心定位偏软：三种搜索窗口分歧 0.0043 图宽 ≈ 0.81mm（长发常见，头发向下越来越宽，\"最宽的一行\"不是锚定特征）。容差 4mm，可用。",
+    "发顶距画布上沿仅 0.45%，裁切极紧；本期够用，但以后若需把头往上挪没有余量"
+  ]
+}

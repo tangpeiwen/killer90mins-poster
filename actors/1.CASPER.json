@@ -1,0 +1,19 @@
+{
+  "id": "1.CASPER",
+  "file": "0829 Killer/1.CASPER.png",
+  "px": [
+    2756,
+    3796
+  ],
+  "headTopRatio": 0.048209,
+  "headCenterXRatio": 0.471154,
+  "headWidthRatio": 0.314224,
+  "headWidestDepth": 0.187302,
+  "aspect": 0.726027,
+  "dpi_at_target": 368.4,
+  "center_spread": 0.0,
+  "alpha_threshold": 128,
+  "verdict": "OK",
+  "fatal": [],
+  "issues": []
+}

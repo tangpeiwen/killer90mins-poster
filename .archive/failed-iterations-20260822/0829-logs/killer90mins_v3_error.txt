@@ -1,0 +1,1 @@
+Error: ACTOR_05 dual-state contract incomplete: SECRET_GUEST_MODE=true, PHOTO_MODE=false, silhouette=true, blackPanel=trueACTOR_05 dual-state contract incomplete: SECRET_GUEST_MODE=true, PHOTO_MODE=false, silhouette=true, blackPanel=true

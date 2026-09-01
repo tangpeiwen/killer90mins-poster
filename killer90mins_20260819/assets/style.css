@@ -1,0 +1,74 @@
+/* 共享样式 —— 所有 lesson 与 reference 共用。Tufte 风格：宽边注、克制的色彩、可打印。 */
+:root{
+  --ink:#1a1a18; --ink-soft:#55534e; --ink-faint:#8a8781;
+  --paper:#fffef9; --rule:#dedbd2;
+  --bad:#9d2933; --bad-bg:#fdf1f1;
+  --good:#2d6a4f; --good-bg:#f0f7f3;
+  --accent:#8c5a2b; --mark:#fff3c4;
+  --serif:"Songti SC","Source Han Serif SC",Georgia,"Times New Roman",serif;
+  --sans:"PingFang SC","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{
+  margin:0 auto; padding:4rem 1.5rem 6rem; max-width:46rem;
+  background:var(--paper); color:var(--ink);
+  font:1.05rem/1.75 var(--serif); font-feature-settings:"kern","liga";
+  -webkit-font-smoothing:antialiased;
+}
+h1{font:600 2.1rem/1.25 var(--sans); margin:0 0 .4rem; letter-spacing:-.02em}
+h2{font:600 1.3rem/1.35 var(--sans); margin:3rem 0 .9rem; padding-bottom:.35rem; border-bottom:1px solid var(--rule)}
+h3{font:600 1.02rem/1.4 var(--sans); margin:2rem 0 .5rem; color:var(--ink-soft)}
+p{margin:0 0 1.1rem}
+a{color:var(--accent); text-decoration:none; border-bottom:1px solid #d8c3a5}
+a:hover{border-bottom-color:var(--accent)}
+code{font:.88em var(--mono); background:#f4f2ea; padding:.12em .35em; border-radius:3px}
+pre{font:.82rem/1.6 var(--mono); background:#f7f5ee; border-left:3px solid var(--rule);
+    padding:1rem 1.1rem; overflow-x:auto; margin:1.2rem 0}
+pre code{background:none; padding:0}
+blockquote{margin:1.4rem 0; padding:.2rem 0 .2rem 1.2rem; border-left:3px solid var(--accent);
+           color:var(--ink-soft); font-style:normal}
+.kicker{font:600 .74rem/1 var(--sans); letter-spacing:.14em; text-transform:uppercase;
+        color:var(--ink-faint); margin:0 0 1.1rem}
+.lede{font-size:1.16rem; color:var(--ink-soft); margin-bottom:2.4rem}
+.meta{font:.82rem/1.6 var(--sans); color:var(--ink-faint); margin-top:.6rem}
+table{width:100%; border-collapse:collapse; margin:1.4rem 0; font:.92rem/1.55 var(--sans)}
+th{text-align:left; font-weight:600; border-bottom:2px solid var(--ink); padding:.5rem .6rem}
+td{border-bottom:1px solid var(--rule); padding:.6rem; vertical-align:top}
+td.n{font:.86rem var(--mono); white-space:nowrap}
+.pair{display:grid; grid-template-columns:1fr 1fr; gap:0; margin:1.3rem 0; border:1px solid var(--rule)}
+.pair>div{padding:1rem 1.1rem}
+.pair>div:first-child{background:var(--bad-bg); border-right:1px solid var(--rule)}
+.pair>div:last-child{background:var(--good-bg)}
+.pair h4{margin:0 0 .5rem; font:600 .74rem/1 var(--sans); letter-spacing:.1em; text-transform:uppercase}
+.pair>div:first-child h4{color:var(--bad)}
+.pair>div:last-child h4{color:var(--good)}
+.pair p{margin:0; font-size:.95rem; line-height:1.6}
+@media(max-width:640px){.pair{grid-template-columns:1fr}.pair>div:first-child{border-right:0;border-bottom:1px solid var(--rule)}}
+mark{background:var(--mark); padding:.05em .15em}
+.callout{background:#f7f5ee; border:1px solid var(--rule); border-radius:4px; padding:1.1rem 1.3rem; margin:1.6rem 0}
+.callout.key{border-left:4px solid var(--accent); background:#fdf9f2}
+.callout p:last-child{margin-bottom:0}
+/* ---- 测验组件 ---- */
+.quiz{border:1px solid var(--rule); border-radius:4px; margin:1.2rem 0; overflow:hidden}
+.quiz .q{padding:1rem 1.2rem .3rem; font:1rem/1.6 var(--sans)}
+.quiz .src{font:.78rem/1.5 var(--mono); color:var(--ink-faint); padding:0 1.2rem .7rem}
+.quiz .opts{display:flex; gap:.6rem; padding:0 1.2rem 1rem; flex-wrap:wrap}
+.quiz button{font:600 .92rem var(--sans); padding:.5rem 1.4rem; border:1px solid var(--rule);
+             background:#fff; border-radius:3px; cursor:pointer; color:var(--ink)}
+.quiz button:hover{border-color:var(--ink-faint)}
+.quiz button.ok{background:var(--good-bg); border-color:var(--good); color:var(--good)}
+.quiz button.no{background:var(--bad-bg); border-color:var(--bad); color:var(--bad)}
+.quiz .fb{display:none; padding:0 1.2rem 1.1rem; font:.93rem/1.65 var(--sans); color:var(--ink-soft)}
+.quiz .fb.show{display:block}
+.score{font:600 1rem var(--sans); text-align:center; padding:1rem; border:1px dashed var(--rule);
+       border-radius:4px; margin:1.6rem 0; color:var(--ink-soft)}
+.footer{margin-top:4rem; padding-top:1.4rem; border-top:1px solid var(--rule);
+        font:.9rem/1.7 var(--sans); color:var(--ink-soft)}
+.footer a{font-weight:600}
+@media print{
+  body{padding:0; max-width:none; font-size:10.5pt; background:#fff}
+  .quiz .opts,.score{display:none}
+  .quiz .fb{display:block}
+  a{border:0; color:var(--ink)}
+}

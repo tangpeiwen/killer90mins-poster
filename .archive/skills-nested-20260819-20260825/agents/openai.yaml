@@ -1,0 +1,4 @@
+interface:
+  display_name: "Killer90mins 海报更新"
+  short_description: "按 Illustrator 母版替换演员、日期并对照标准图完成视觉校准"
+  default_prompt: "Use $update-killer90mins-poster to update this Killer90mins Illustrator poster from the brief and verify the result against the approved reference."

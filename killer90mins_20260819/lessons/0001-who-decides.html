@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第 1 课 · 判定权在谁手里</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/quiz.js"></script>
+</head>
+<body>
+
+<p class="kicker">第 1 课 · 写出能稳定执行的 skill</p>
+<h1>判定权在谁手里</h1>
+<p class="lede">你的第一版 skill 并不笨。它把失败原因几乎全诊断对了 —— 然后把每一条的判定权，
+都留在了人的眼睛里。</p>
+
+<h2>先说清楚：第一版诊断得很准</h2>
+
+<p>翻开归档里那份原始的 <code>history-to-rules.md</code>，里面这几句是真知灼见，
+写在 v10 还没失败完的时候：</p>
+
+<blockquote>
+“A script can run successfully while the visual result remains insufficient.”<br>
+“Geometric image centering does not center a visible person inside transparent PNG canvas space.”<br>
+“Applying one equal downward offset does not create an equal visible head gap.”<br>
+“Fine adjustments are hard to judge at <code>18.54%</code> zoom.”
+</blockquote>
+
+<p>四句话，四个真问题，事后全部被证实。<mark>所以第一版失败，不是因为它不懂。</mark>
+这一点很重要 —— 如果失败原因是"没想到"，那解法是想更多；
+但它想到了，还是失败了，说明解法在别的地方。</p>
+
+<h2>问题出在下一句</h2>
+
+<p>每条正确的诊断后面，跟着的是一条无法执行的处方。左边是第一版原文，右边是重写版：</p>
+
+<div class="pair">
+  <div><h4>第一版</h4><p>Center the visible face, not the transparent PNG canvas.</p></div>
+  <div><h4>重写版</h4><p>发顶 = 沿列扫描，<code>alpha ≥ 128</code> 的像素连续覆盖 ≥ 源图高度 0.1% 的第一行。</p></div>
+</div>
+
+<div class="pair">
+  <div><h4>第一版</h4><p>Use approximately <code>12 mm ± 2 mm</code> only when that is the designer-approved target for this master.</p></div>
+  <div><h4>重写版</h4><p><code>12.0 ± 1.0 mm</code>。容差来源：认可稿实测 11.45–12.56。</p></div>
+</div>
+
+<div class="pair">
+  <div><h4>第一版</h4><p>Compare against the approved reference at the same approximate scale and at <code>45%–100%</code> for fine alignment.</p></div>
+  <div><h4>重写版</h4><p><code>python3 tools/verify_poster.py …</code> —— 五格全部 PASS 才算完成。</p></div>
+</div>
+
+<p>左边那三句，读起来都像规则。但试着回答一个问题：</p>
+
+<div class="callout key">
+<p><strong>跑完之后，谁来判断这一条满足了没有？</strong></p>
+<p>左边的答案都是"人，用眼睛"。右边的答案都是"一段能跑的代码"。</p>
+</div>
+
+<p>这就是全部分水岭。<mark>判定权在眼睛里的规则，不是规则，是建议。</mark>
+而建议无法阻止 AI 一版一版地改下去 —— 因为每一版它都可以真诚地认为自己做到了。</p>
+
+<h3>为什么"眼睛"在这个任务上尤其靠不住</h3>
+
+<p>这不是抽象论证。这次协作里有两次实打实的证据：</p>
+
+<table>
+<tr><th>发生了什么</th><th>眼睛给出的答案</th><th>测量给出的答案</th></tr>
+<tr><td>把名牌间距统一到 12mm 后出图</td><td class="n">"我看不出区别"</td><td class="n">下侧退步 0.4mm</td></tr>
+<tr><td>设计师认可并出街的海报</td><td class="n">没人发现问题</td><td class="n">五格间距差 4.6mm</td></tr>
+</table>
+
+<p>眼睛不是不行，是<strong>在毫米尺度上没有分辨率</strong>。把 0.9mm 的判断交给它，
+等于把判定权交给了随机数。</p>
+
+<h2>练习：五分钟辨认</h2>
+
+<p>下面六条，都是你两版 skill 里的原文。判断每一条<strong>能不能不靠人眼给出答案</strong>。
+提示：新旧不是判据，别按来源猜。</p>
+
+<div class="quiz" data-answer="B">
+  <div class="q">1. “Center the visible face, not the transparent PNG canvas.”</div>
+  <div class="src">SKILL.md · 第一版</div>
+  <div class="opts"><button data-v="A">有判定</button><button data-v="B">无判定</button></div>
+  <div class="fb" data-for="B"><strong>无判定。</strong>“visible face”在哪里结束？眉毛？头发？
+  这句话没有给出任何可以执行的边界 —— 而这正是 AI 反复摇摆的那个数。</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <div class="q">2. “发顶 = <code>alpha ≥ 128</code> 的像素连续覆盖 ≥ 源图高度 0.1% 的第一行。”</div>
+  <div class="src">measurement-definitions.md · 重写版</div>
+  <div class="opts"><button data-v="A">有判定</button><button data-v="B">无判定</button></div>
+  <div class="fb" data-for="A"><strong>有判定。</strong>任何人、任何时候、对同一张图跑，
+  都得到同一个数。注意它没有声称自己"正确" —— 只声称<em>可复现</em>，这就够了。</div>
+</div>
+
+<div class="quiz" data-answer="B">
+  <div class="q">3. “Use approximately <code>12 mm ± 2 mm</code> only when that is the designer-approved target.”</div>
+  <div class="src">qa-checklist.md · 第一版</div>
+  <div class="opts"><button data-v="A">有判定</button><button data-v="B">无判定</button></div>
+  <div class="fb" data-for="B"><strong>无判定。</strong>有数字≠可判定。
+  “approximately”“only when that is”把它变回了建议；而且 12 和 ±2 都没有出处 ——
+  <mark>没有来源的数字，等于没有数字。</mark></div>
+</div>
+
+<div class="quiz" data-answer="B">
+  <div class="q">4. “核对图必须人眼看一次：品红线应压在发顶、绿框应在太阳穴高度。”</div>
+  <div class="src">SKILL.md · 重写版</div>
+  <div class="opts"><button data-v="A">有判定</button><button data-v="B">无判定</button></div>
+  <div class="fb" data-for="B"><strong>无判定 —— 而且是故意的。</strong>
+  这一条重写版里也交给了眼睛。区别在于：它<strong>明确标注</strong>了这是人工环节，
+  且把任务缩小到"看一条线画对没有"这种眼睛真正擅长的判断。
+  <br><br>目标从来不是消灭人工判断，而是<mark>让每一条都明确知道判定权归谁</mark>。
+  藏起来的人工环节才是致命的 —— 那正是第一版失败的原因：设计师手工补了两成，
+  而 skill 里一个字都没记。</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <div class="q">5. “Confirm actor order exactly matches the brief.”</div>
+  <div class="src">qa-checklist.md · 第一版</div>
+  <div class="opts"><button data-v="A">有判定</button><button data-v="B">无判定</button></div>
+  <div class="fb" data-for="A"><strong>有判定。</strong>第一版并非全错。
+  这一条是字符串相等比较，机器可判、无歧义。
+  <mark>差别不在新旧，在于这一条恰好没有涉及"看起来"。</mark>
+  凡是涉及位置、大小、间距、居中的条目，第一版全部失守。</div>
+</div>
+
+<div class="quiz" data-answer="A">
+  <div class="q">6. “<code>12.0 ± 1.0 mm</code>。容差来源：认可稿实测 11.45–12.56。”</div>
+  <div class="src">qa-checklist.md · 重写版</div>
+  <div class="opts"><button data-v="A">有判定</button><button data-v="B">无判定</button></div>
+  <div class="fb" data-for="A"><strong>有判定。</strong>和第 3 题同样是 12mm，
+  差别有两处：去掉了"approximately"，以及<strong>写明了容差从哪来</strong>。
+  后者让下一个人能判断该不该改它 —— 而不是"顺手改成整数"。</div>
+</div>
+
+<div class="score"></div>
+
+<h2>那这次为什么稳了</h2>
+
+<p>把判定权收回来只是第一步。真正让成品稳定的是三件事，按重要性排：</p>
+
+<table>
+<tr><th style="width:2.2rem">#</th><th>做了什么</th><th>没有它会怎样</th></tr>
+<tr><td class="n">1</td><td><strong>每条规则都有一段能跑的判定</strong><br>
+  <code>verify_poster.py</code> 读回 <code>.ai</code> 的实际坐标重算</td>
+  <td>脚本自己说"验证通过"。第一版的 <code>verified_gap_mm=12.0</code>
+  校验的是它自己的算术 —— 输入错时同样输出 12.0</td></tr>
+<tr><td class="n">2</td><td><strong>每个数字都有来源</strong><br>
+  测出来的 / 从认可稿反推的 / 人拍板的</td>
+  <td>第一版里 <code>focal_x: 0.55</code> 这类字段是发明的，
+  没有测法、无法复现，AI 只能继续编</td></tr>
+<tr><td class="n">3</td><td><strong>系统有不动点</strong><br>
+  名牌由模板决定、永不逐期动；人像由名牌决定</td>
+  <td>第一版让名牌和人像互为参照、同时移动 ——
+  <mark>那个迭代数学上就不收敛</mark>，再精确也没用</td></tr>
+</table>
+
+<p>第 3 条最容易被忽略，却是 v1→v10 的直接死因。它不是"做得不够好"的问题，
+是<strong>那个解法根本没有解</strong>。</p>
+
+<div class="callout">
+<p><strong>一句话版本：</strong>第一版描述了"要达到什么效果"，重写版规定了"怎么算达到了"。
+前者是愿望，后者是规格。</p>
+</div>
+
+<h2>今天做一件事</h2>
+
+<p>打开你手上任意一个别的 skill —— <code>baopi-review</code>、<code>xiaohongshu-title</code>、
+<code>consulting-action-list</code> 都行。找到它的验收/检查部分，逐条问：</p>
+
+<p style="text-align:center;font:600 1.1rem var(--sans);margin:1.6rem 0">
+“跑完之后，谁来判断这一条满足了没有？”</p>
+
+<p>把答案是"人，用眼睛/凭感觉"的条目圈出来。<strong>先不用改</strong> ——
+这一课的目标只是让你能看见它们。下一课我们练怎么改写。</p>
+
+<p>圈完可以把结果发给我，我们一起看哪些是真的该交给人、哪些只是没想清楚。</p>
+
+<h2>去读一手材料</h2>
+
+<p>本课的一手材料就是你自己的两版 skill，都在磁盘上：</p>
+<ul>
+<li>第一版（references 完全未改动）：<code>../../.archive/skills-nested-20260819-20260825/</code></li>
+<li>重写版：<code>../../skills/update-killer90mins-poster/</code></li>
+</ul>
+
+<p>如果想读外部材料，最值得的一篇是 Anthropic 工程博客的
+<a href="https://www.anthropic.com/engineering/writing-tools-for-agents">Writing effective tools for agents</a> ——
+它讲的是给 agent 写工具，但"消除歧义、让 agent 能自证"的思路和本课完全一致。</p>
+
+<div class="footer">
+<p><strong>随时问我。</strong>我是你这门课的老师 —— 上面任何一条不清楚、
+或者你在自己的 skill 里遇到拿不准的条目，直接问。</p>
+<p>参考卡：<a href="../reference/rule-executability.html">规则可执行性检查表</a>（可打印）<br>
+下一课预告：把"无判定"的条目改写成"有判定"的四种手法</p>
+</div>
+
+</body>
+</html>

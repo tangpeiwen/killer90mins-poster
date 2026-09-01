@@ -1,0 +1,19 @@
+{
+  "id": "4.凌浩",
+  "file": "0829 Killer/4.凌浩.png",
+  "px": [
+    5430,
+    7479
+  ],
+  "headTopRatio": 0.107768,
+  "headCenterXRatio": 0.409945,
+  "headWidthRatio": 0.31326,
+  "headWidestDepth": 0.139323,
+  "aspect": 0.726033,
+  "dpi_at_target": 725.9,
+  "center_spread": 0.0,
+  "alpha_threshold": 128,
+  "verdict": "OK",
+  "fatal": [],
+  "issues": []
+}

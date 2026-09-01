@@ -1,0 +1,2 @@
+#target illustrator
+(function(){var d=app.activeDocument,o=new File('/tmp/k90_master_caleb_tree.txt');o.open('w');function w(s){o.writeln(s);}function walk(x,depth){var pad='';for(var q=0;q<depth;q++)pad+='  ';try{w(pad+x.typename+' name='+x.name+' hidden='+x.hidden+' locked='+x.locked+' bounds='+x.geometricBounds);}catch(e){w(pad+x.typename+' name='+x.name);}try{for(var i=0;i<x.pageItems.length;i++)walk(x.pageItems[i],depth+1);}catch(e2){}}var l=d.layers.getByName('ACTOR_04');walk(l,0);o.close();}());
