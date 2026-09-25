@@ -57,6 +57,24 @@
               +' ink_gb='+(isx?bb(isx):'FAIL'));
           }
         }
+        // 有剪影能力 ≠ 本期用剪影。第 4 格从 slot4secret 母版起两种模式都在，
+        // 这一期它出的是真人照片 —— 若只写模式行，R0/R1/R2/R3/COV 全部漏检。
+        // 照片模式当值时，再补一条与普通格子完全同格式的行，让 verify 照常算。
+        if(pm===true && pl5){
+          var t6=safe(function(){return pl5.textFrames.getByName('NAME');},null);
+          var g6=safe(function(){return pl5.groupItems.getByName('PHOTO');},null);
+          if(!g6) g6=safe(function(){return pl5.groupItems.getByName('PHTOTO');},null);
+          var p6=g6?pl(g6):null;
+          if(t6){
+            var i6=ink(t6);
+            w(nm+' name="'+t6.contents+'"'
+              +' font='+safe(function(){return t6.textRange.characterAttributes.textFont.name;},'?')
+              +' size='+safe(function(){return t6.textRange.characterAttributes.size.toFixed(3);},'?')
+              +' ink_gb='+(i6?bb(i6):'FAIL')
+              +' photo_gb='+(p6?bb(p6.geometricBounds):'NONE')
+              +' photo_file='+(p6?safe(function(){return p6.file.name;},'MISSING'):'NONE'));
+          }
+        }
         continue;
       }
       tf=L.textFrames.getByName('NAME');

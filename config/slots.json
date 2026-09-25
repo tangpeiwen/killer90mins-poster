@@ -1,5 +1,5 @@
 {
-  "_source": "killer90mins_20260905/killer90mins_master_slot4secret.ai",
+  "_source": "killer90mins_20260912/killer90mins_master_v2.ai",
   "_spec": "docs/specs/2026-08-23-killer90mins-poster-automation-design.md",
   "artboard_pt": [
     -4708.06,
@@ -23,7 +23,8 @@
     "_gap_panel_to_card_note": "全局 12.0 是设计师口述的规格，但两份他认可的文件都不执行它。逐格值取「认可稿 v3」与「0829（设计师明确说边距更好）」的均值：v3 = 15.28/14.82/14.35/12.54，0829 = 16.98/15.08/13.95/12.88。两个文件血脉独立（v3 手工校准，0829 出自旧 AI 管线 v6 分支），却在 slot 02/03/04 上吻合到 0.4mm 以内 —— 说明「从左到右递减」是真实版式意图，不是手工漂移，统一成一个数会抹掉它。ACTOR_05 神秘嘉宾名牌不动（两行、未旋转、单独对待）。",
     "date_month_to_day_gap_mm": 5.83,
     "tol_date_gap_mm": 1.0,
-    "_date_gap_note": "MONTH 墨迹右沿 → DAY 墨迹左沿（两端都用转轮廓后的真实墨迹，不用文字框）。模板里 DAY/WEEKDAY 位置是死的，换月份或换成一位数就走形：SEPT 比 AUG 宽 31mm，而 \"5\" 比 \"29\" 窄，两头叠加会把间距撑到 23mm。目标值由两份认可稿反推：v3（SEPT 22）= 6.18mm，0829（AUG 29）= 5.49mm，取均值 5.83mm，两份差 0.69mm —— 与 R0 逐格值的推导方式一致。stage2 把 DAY 与 WEEKDAY 整体平移；只挪 DAY 会把 DAY→WEEKDAY 间距同样撑开（认可稿该项为 2.99/4.33mm）。"
+    "_date_gap_note": "MONTH 墨迹右沿 → DAY 墨迹左沿（两端都用转轮廓后的真实墨迹，不用文字框）。模板里 DAY/WEEKDAY 位置是死的，换月份或换成一位数就走形：SEPT 比 AUG 宽 31mm，而 \"5\" 比 \"29\" 窄，两头叠加会把间距撑到 23mm。目标值由两份认可稿反推：v3（SEPT 22）= 6.18mm，0829（AUG 29）= 5.49mm，取均值 5.83mm，两份差 0.69mm —— 与 R0 逐格值的推导方式一致。stage2 把 DAY 与 WEEKDAY 整体平移；只挪 DAY 会把 DAY→WEEKDAY 间距同样撑开（认可稿该项为 2.99/4.33mm）。",
+    "_silhouette_art_note": "silhouette_art_gb_pt = 剪影「图形本体」（裁切路径以外的那个子项）的目标 geometricBounds，[left,top,right,bottom] pt。ACTOR_04 的值直接读自设计师终稿 killer90mins_20260905.ai —— 那版剪影是他自己重画并认可的摆位；ACTOR_05 由它平移 (+315.90,+109.83) 得到，即 tools/make_master_slot4_secret.py 当初 05→04 平移量的逆，两格因此保持同一相对构图（图形中心均在黑板中心右 +37.93pt，顶端均在 SECRET GUEST 名牌下方 ~35pt）。tools/set_silhouette_png.py 用它把剪影 PNG 摆进母版；PNG 的不透明包围盒对齐到这个框。"
   },
   "slots": {
     "ACTOR_01": {
@@ -176,7 +177,13 @@
         "cos": 0.942891,
         "sin": 0.333101
       },
-      "gap_panel_to_card_mm": 12.71
+      "gap_panel_to_card_mm": 12.71,
+      "silhouette_art_gb_pt": [
+        -3796.94,
+        -836.87,
+        -3206.88,
+        -1476.45
+      ]
     },
     "ACTOR_05": {
       "photo_group": "PHOTO",
@@ -213,8 +220,14 @@
         "deg": 8.067,
         "cos": 0.990105,
         "sin": 0.140329
-      }
+      },
+      "silhouette_art_gb_pt": [
+        -3481.04,
+        -727.04,
+        -2890.98,
+        -1366.62
+      ]
     }
   },
-  "_source_note": "原为 killer90mins_20260819/killer90mins_v3_12mm.ai。2026-09-05 期需要第 4 格也能出神秘嘉宾剪影，而该母版的 ACTOR_04 没有 SECRET_GUEST_MODE 组。新母版由 tools/make_master_slot4_secret.py 从 killer90mins_auto_20260829.ai 生成：把第 5 格剪影平移到第 4 格并换成 slot4 的裁切板。黑板几何未变，本文件其余常量继续有效。"
+  "_source_note": "原为 killer90mins_20260819/killer90mins_v3_12mm.ai。2026-09-05 期需要第 4 格也能出神秘嘉宾剪影，而该母版的 ACTOR_04 没有 SECRET_GUEST_MODE 组。新母版由 tools/make_master_slot4_secret.py 从 killer90mins_auto_20260829.ai 生成：把第 5 格剪影平移到第 4 格并换成 slot4 的裁切板。黑板几何未变，本文件其余常量继续有效。 2026-09-12 期再升一版 killer90mins_20260912/killer90mins_master_v2.ai：由 tools/set_silhouette_png.py 把设计师 0905 期重画的剪影（导出的 PNG，assets/secret_guest_silhouette.png）嵌进 ACTOR_04 与 ACTOR_05 的「剪影」组，换掉旧图形本体，裁切板与 SECRET GUEST 名牌均未动。走放图而非 extract_silhouette.py，是因为后者的跨文档 duplicate() 会挂死 Illustrator（见该文件抬头）。黑板几何未变，本文件其余常量继续有效。"
 }

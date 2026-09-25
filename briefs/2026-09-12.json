@@ -1,0 +1,59 @@
+{
+  "date": "2026-09-12",
+  "month": "SEPT",
+  "day": "12",
+  "weekday": "sat.",
+  "time": "19:30-21:00",
+  "host": "ACTOR_01",
+  "slots": {
+    "ACTOR_01": {
+      "mode": "PHOTO",
+      "name": "casper",
+      "name_font": "LaMachineCompany",
+      "name_size": 54.25,
+      "name_fill": "glyph",
+      "photo": "0912照片/1.CASPER.png",
+      "metrics": "actors/1.CASPER.json",
+      "_note": "主持人。2026-09-04 出图当天用户把 0912照片/1.CASPER.png 换成了 0829 期那张（逐字节相同，md5 c9c5df4d…），本期以换后这张为准，metrics 直接复用 actors/1.CASPER.json。"
+    },
+    "ACTOR_02": {
+      "mode": "PHOTO",
+      "name": "chin wang",
+      "name_font": "LaMachineCompany",
+      "name_size": 49.19,
+      "name_fill": "glyph",
+      "photo": "0912照片/2.Chin Wang.png",
+      "metrics": "actors/2.Chin Wang.json",
+      "target_head_width_mm": 77.4,
+      "_note": "长发，轮廓被头发严重撑宽，沿用认可稿 killer90mins_v3.ai 实测的 77.4mm。字号 49.19 也来自认可稿：54.25 时墨迹宽 102.29mm、黑板宽 103.89mm，单边只剩 0.80mm，贴边。照片与 0905 期同一文件，L2 值逐位相同。"
+    },
+    "ACTOR_03": {
+      "mode": "PHOTO",
+      "name": "ian b",
+      "name_font": "LaMachineCompany",
+      "name_size": 54.25,
+      "name_fill": "glyph",
+      "photo": "0912照片/3.IAN B.png",
+      "metrics": "actors/3.IAN B.json",
+      "_note": "名字按本期给的信息写作 ian b（0905 期设计师在成品上手改 ian→ian B 导致 R0 漂到 17.13mm；这次从 brief 出发，stage1 量到的就是最终墨迹宽，R0 不会漂）。照片与 0905 期同一文件，L2 值逐位相同。"
+    },
+    "ACTOR_04": {
+      "mode": "PHOTO",
+      "name": "凌 浩",
+      "name_font": "Huiwen-MinchoGBK-Regular",
+      "name_size": 54.25,
+      "name_fill": "white",
+      "photo": "0912照片/4.凌浩.png",
+      "metrics": "actors/4.凌浩.json",
+      "_note": "中文名无白色印章板（白块是拉丁字体自带的字形），现行做法是白色填充无框，已获认可。照片与 0829 期同一文件。"
+    },
+    "ACTOR_05": {
+      "mode": "SECRET_GUEST",
+      "_who": "Andreas（黑衣人）—— 剪影不显示真名，此字段仅供人工追溯",
+      "_silhouette": "剪影图形已在母版 killer90mins_20260912/killer90mins_master_v2.ai 里换成本期提供的 0912照片/5.神秘嘉宾Andreas.png（= assets/secret_guest_silhouette.png），即设计师 0905 期重画的那一版。管线本身不换剪影。"
+    }
+  },
+  "target_head_width_mm": 64.4,
+  "_target_head_width_note": "认可稿 killer90mins_v3.ai 实测：短发四人 64.6/66.8/63.1/63.1（均值 64.4），长发 chin wang 77.4",
+  "_order_note": "五格顺序按本期照片文件名编号 1~5（用户 2026-09-04 确认）：01 casper(主持) / 02 chin wang / 03 ian b / 04 凌浩 / 05 Andreas 神秘嘉宾。名单文字里 Andreas 排在第二位，与文件编号不一致，以文件编号为准。"
+}

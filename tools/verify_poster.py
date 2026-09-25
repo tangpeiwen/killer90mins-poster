@@ -31,9 +31,12 @@ def parse_l4(path):
                              'ink': [float(v) for v in m.group(5).split(',')],
                              'photo': [float(v) for v in m.group(6).split(',')],
                              'file': m.group(7)}
+    # 模式行与照片行合并，不覆盖：兼具两种模式的格子（ACTOR_04/05）两条都会出现，
+    # 早先这里直接赋值，会把照片模式量到的 ink/photo 冲掉，导致该格漏检。
     for m in re.finditer(r'(ACTOR_\d\d) photo_mode_visible=(\S+) silhouette_hidden=(\S+)', txt):
-        slots[m.group(1)] = {'mode': 'SECRET_GUEST', 'photo_mode_visible': m.group(2),
-                             'silhouette_hidden': m.group(3)}
+        d = slots.setdefault(m.group(1), {})
+        d['photo_mode_visible'] = m.group(2)
+        d['silhouette_hidden'] = m.group(3)
     for m in re.finditer(r'DATE (\S[^=]*)="(.*?)"', txt):
         misc.setdefault('date', {})[m.group(1).strip()] = m.group(2)
     for m in re.finditer(r'DATE (\S[^=]*)=".*?" gb=\[[^\]]+\] ink_gb=\[([^\]]+)\]', txt):
@@ -99,6 +102,14 @@ def main():
                   f'{"PASS" if good else "FAIL"}')
             continue
         g = got[slot]
+        if 'ink' not in g:
+            ok = False
+            print(f'{slot:<10}{"?":<9}│ L4 里没有这一格的照片模式数据 —— '
+                  f'审计脚本是旧版或该格没切到照片模式   FAIL')
+            continue
+        # 这一格若同时具备剪影能力，还得确认它真的停在照片模式
+        mode_ok = ('photo_mode_visible' not in g
+                   or (g['photo_mode_visible'] == 'true' and g['silhouette_hidden'] == 'true'))
         te = sl['top_edge']
         m_, (x1, y1) = te['slope'], te['through']
         th = math.atan(m_); ca, sa = math.cos(th), math.sin(th)
@@ -136,7 +147,11 @@ def main():
         o3 = abs(r3) <= rule['tol_center_mm']
         o1 = abs(r1) <= rule['tol_card_center_mm']
         o4 = cov >= rule['bottom_bleed_mm'] - 0.05
-        ok &= o0 and o2 and o3 and o1 and o4
+        ok &= o0 and o2 and o3 and o1 and o4 and mode_ok
+        if not mode_ok:
+            print(f'{slot:<10}{"":<9}│ 照片模式未生效：photo_mode_visible='
+                  f'{g.get("photo_mode_visible")} silhouette_hidden='
+                  f'{g.get("silhouette_hidden")}   FAIL')
         f = lambda b: 'PASS' if b else 'FAIL'
         print(f'{slot:<10}{g["name"][:8]:<9}│ {r0:>6.2f} {f(o0):<8}{r2:>6.2f} {f(o2):<8}'
               f'{r3:>+6.2f} {f(o3):<8}{r1:>+6.2f} {f(o1):<7}{cov:>7.1f} {f(o4):<6}')

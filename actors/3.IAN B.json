@@ -1,0 +1,19 @@
+{
+  "id": "3.IAN B",
+  "file": "0912照片/3.IAN B.png",
+  "px": [
+    8376,
+    11536
+  ],
+  "headTopRatio": 0.06484,
+  "headCenterXRatio": 0.437022,
+  "headWidthRatio": 0.304202,
+  "headWidestDepth": 0.116678,
+  "aspect": 0.726075,
+  "dpi_at_target": 1119.7,
+  "center_spread": 0.0,
+  "alpha_threshold": 128,
+  "verdict": "OK",
+  "fatal": [],
+  "issues": []
+}

@@ -73,6 +73,11 @@ def stage1(brief, cfg, out_jsx, silent=False):
     A(' var WHITE=new RGBColor(); WHITE.red=255; WHITE.green=255; WHITE.blue=255;')
     A(' function pl(x){try{if(x.placedItems.length)return x.placedItems[0];}catch(e){}'
       'try{for(var i=0;i<x.groupItems.length;i++){var z=pl(x.groupItems[i]);if(z)return z;}}catch(e2){}return null;}')
+    # 能出剪影的格子（slot4secret 母版起 ACTOR_04/05 都是）把 NAME 与 PHOTO 收进
+    # PHOTO_MODE 子图层里，Layer.textFrames / Layer.groupItems 只看直接子项，
+    # 直接在 ACTOR 层上取会抛 "No such element"。统一先解析出真正的宿主。
+    A(' function pmOf(L){try{return L.layers.getByName("PHOTO_MODE");}catch(e){return null;}}')
+    A(' function sgOf(L){try{return L.groupItems.getByName("SECRET_GUEST_MODE");}catch(e){return null;}}')
     A(' function bb(b){return "["+b[0].toFixed(4)+","+b[1].toFixed(4)+","+b[2].toFixed(4)+","+b[3].toFixed(4)+"]";}')
     A(' var tmp=[];')
     A(' function ink(tf){var g=tf.duplicate(d,ElementPlacement.PLACEATEND);tmp[tmp.length]=g;'
@@ -86,20 +91,27 @@ def stage1(brief, cfg, out_jsx, silent=False):
         if s['mode'] == 'SECRET_GUEST':
             A('  // ---- %s : 切换到神秘嘉宾剪影 ----' % slot)
             A('  var L5=d.layers.getByName(%s);' % esc(slot))
-            A('  L5.layers.getByName("PHOTO_MODE").visible=false;')
-            A('  L5.groupItems.getByName("SECRET_GUEST_MODE").hidden=false;')
+            A('  var pm5=pmOf(L5), sg5=sgOf(L5);')
+            A('  if(!sg5) throw new Error(%s+" \\u6ca1\\u6709 SECRET_GUEST_MODE \\u7ec4");' % esc(slot))
+            A('  if(pm5) pm5.visible=false;')
+            A('  sg5.hidden=false;')
             A('  rep.writeln("%s mode=SECRET_GUEST photo_mode_visible=false silhouette_hidden=false");' % slot)
             continue
         grp = cfg['slots'][slot]['photo_group']
         A('  // ---- %s ----' % slot)
         A('  var Lx=d.layers.getByName(%s);' % esc(slot))
-        A('  var tf=Lx.textFrames.getByName("NAME");')
+        # 兼具两种模式的格子：显式切到照片模式，不吃母版的默认状态
+        A('  var pmx=pmOf(Lx), sgx=sgOf(Lx);')
+        A('  if(pmx) pmx.visible=true;')
+        A('  if(sgx) sgx.hidden=true;')
+        A('  var Hx=pmx?pmx:Lx;')
+        A('  var tf=Hx.textFrames.getByName("NAME");')
         A('  tf.contents=%s;' % esc(s['name']))
         A('  tf.textRange.characterAttributes.textFont=app.textFonts.getByName(%s);' % esc(s['name_font']))
         A('  tf.textRange.characterAttributes.size=%s;' % s['name_size'])
         if s.get('name_fill') == 'white':
             A('  tf.textRange.characterAttributes.fillColor=WHITE;')
-        A('  var p=pl(Lx.groupItems.getByName(%s));' % esc(grp))
+        A('  var p=pl(Hx.groupItems.getByName(%s));' % esc(grp))
         A('  if(!p) throw new Error(%s+" \\u627e\\u4e0d\\u5230\\u4eba\\u50cf");' % esc(slot))
         A('  p.file=new File(%s);' % esc(str(ROOT / s['photo'])))
         A('  var ig=ink(tf);')
@@ -307,6 +319,7 @@ def stage2(brief, cfg, measure_path, out_jsx, silent=False):
         esc(str(outdir / (stem + '_s2_log.txt')))))
     A(' function pl(x){try{if(x.placedItems.length)return x.placedItems[0];}catch(e){}'
       'try{for(var i=0;i<x.groupItems.length;i++){var z=pl(x.groupItems[i]);if(z)return z;}}catch(e2){}return null;}')
+    A(' function pmOf(L){try{return L.layers.getByName("PHOTO_MODE");}catch(e){return null;}}')
     A(' var M=[')
     for mv in moves:
         A('  {S:%s,G:%s,cardL:%.5f,cardT:%.5f,left:%.5f,top:%.5f,w:%.5f,h:%.5f},' % (
@@ -317,9 +330,9 @@ def stage2(brief, cfg, measure_path, out_jsx, silent=False):
     A('  d.saveAs(out,new IllustratorSaveOptions());')
     A('  log.encoding="UTF-8"; log.open("w");')
     A('  for(var i=0;i<M.length;i++){var q=M[i];')
-    A('   var Lx=d.layers.getByName(q.S);')
-    A('   var tf=Lx.textFrames.getByName("NAME"); tf.left=q.cardL; tf.top=q.cardT;')
-    A('   var p=pl(Lx.groupItems.getByName(q.G)); if(!p) throw new Error(q.S+" no portrait");')
+    A('   var Lx=d.layers.getByName(q.S); var pmx=pmOf(Lx); var Hx=pmx?pmx:Lx;')
+    A('   var tf=Hx.textFrames.getByName("NAME"); tf.left=q.cardL; tf.top=q.cardT;')
+    A('   var p=pl(Hx.groupItems.getByName(q.G)); if(!p) throw new Error(q.S+" no portrait");')
     A('   p.width=q.w; p.height=q.h; p.left=q.left; p.top=q.top;')
     A('   log.writeln(q.S+" card="+q.cardL+","+q.cardT+" photo="+q.left+","+q.top+","+q.w+","+q.h);')
     A('  }')
